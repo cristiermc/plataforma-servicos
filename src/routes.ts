@@ -1,23 +1,6 @@
 import { IncomingMessage, ServerResponse } from "node:http";
 
-const services = [
-    {
-        id: 1,
-        name: "Eletricista",
-    },
-    {
-        id: 2,
-        name: "Encanador",
-    },
-    {
-        id: 3,
-        name: "Carpinteiro",
-    },
-    {
-        id: 4,
-        name: "Pintor",
-    }
-];
+import { services } from "./data/services.js";
 
 export function handleRoutes(
     request: IncomingMessage,
