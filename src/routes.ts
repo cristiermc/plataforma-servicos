@@ -1,5 +1,24 @@
 import { IncomingMessage, ServerResponse } from "node:http";
 
+const services = [
+    {
+        id: 1,
+        name: "Eletricista",
+    },
+    {
+        id: 2,
+        name: "Encanador",
+    },
+    {
+        id: 3,
+        name: "Carpinteiro",
+    },
+    {
+        id: 4,
+        name: "Pintor",
+    }
+];
+
 export function handleRoutes(
     request: IncomingMessage,
     response: ServerResponse
@@ -14,6 +33,12 @@ export function handleRoutes(
         response.statusCode = 200;
         response.setHeader("Content-Type", "application/json; charset=utf-8");
         response.end(JSON.stringify({status: "ok"}));
+        return;
+    }
+    if (request.url === "/services") {
+        response.statusCode = 200;
+        response.setHeader("Content-Type", "application/json; charset=utf-8");
+        response.end(JSON.stringify(services));
         return;
     }
 
