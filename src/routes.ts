@@ -4,6 +4,7 @@
 import { IncomingMessage, ServerResponse } from "node:http";
 
 import { services } from "./data/services.js";
+import { serviceRequests } from "./data/serviceRequests.js";
 
 //Função responsável por tratar as rotas da aplicação
 export function handleRoutes(
@@ -46,6 +47,14 @@ export function handleRoutes(
         response.statusCode = 200;
         response.setHeader("Content-Type", "application/json; charset=utf-8");
         response.end(JSON.stringify(service));
+        return;
+    }
+
+    //Verifica se a rota para listar todas as solicitações de serviço foi acessada
+    if (request.url === "/services-requests") {
+        response.statusCode = 200;
+        response.setHeader("Content-Type", "application/json; charset=utf-8");
+        response.end(JSON.stringify(serviceRequests));
         return;
     }
 
