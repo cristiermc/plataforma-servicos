@@ -1,3 +1,6 @@
+
+//Contém os dados dos serviços disponíveis na plataforma.
+
 export const services = [
     {
         id: 1,
