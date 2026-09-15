@@ -50,6 +50,31 @@ export function handleRoutes(
         return;
     }
 
+    //Verifica se uma solicitação de serviço individual foi acessada
+    if (request.url?.startsWith("/services-requests/")) {
+
+        //Divide a URL para obter o ID da solicitação de serviço
+        const parts = request.url.split("/");
+        const serviceRequestId = Number(parts[2]);
+
+        //Procura a solicitação de serviço pelo ID informado
+        const serviceRequest = serviceRequests.find((serviceRequest) => serviceRequest.id === serviceRequestId);
+
+        //Verifica se a solicitação de serviço existe
+        if(!serviceRequest) {
+            response.statusCode = 404;
+            response.setHeader("Content-Type", "application/json; charset=utf-8");
+            response.end(JSON.stringify({error: "Solicitação de serviço não encontrada"}));
+            return;
+        }
+
+        //Retorna a solicitação de serviço encontrada em formato JSON
+        response.statusCode = 200;
+        response.setHeader("Content-Type", "application/json; charset=utf-8");
+        response.end(JSON.stringify(serviceRequest));
+        return;
+    }
+
     //Verifica se a rota para listar todas as solicitações de serviço foi acessada
     if (request.url === "/services-requests") {
         response.statusCode = 200;
