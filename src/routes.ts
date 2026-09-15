@@ -11,6 +11,54 @@ export function handleRoutes(
     request: IncomingMessage,
     response: ServerResponse
 ){
+
+    //Verifica se uma solicitação de serviço foi criada
+    if (request.method === "POST" && request.url === "/service-requests") {
+        //console.log("Recebendo uma solicitação de serviço...");
+        let body = "";
+
+        //Recebe os dados enviados na requisição
+        request.on("data", (chunk) => {
+            body += chunk;
+        });
+
+        //Executa quando todos os dados foram recebidos
+        request.on("end", () => {
+            try{
+                //Converte o JSON recebido em um objeto JavaScript
+                const data = JSON.parse(body);
+
+                const newId = serviceRequests.length + 1;
+
+                //Cria uma nova solicitação de serviço
+                const newServiceRequest = {
+                    id: newId,
+                    serviceId: data.serviceId,
+                    description: data.description,
+                    status: "aberta"
+                };
+
+                //Adiciona a nova solicitação a lista
+                serviceRequests.push(newServiceRequest);
+
+                //Retorna a nova solicitação criada para o cliente
+                response.statusCode = 201;
+                response.setHeader("Content-Type", "application/json; charset=utf-8");
+                response.end(JSON.stringify(newServiceRequest));
+                return;
+
+                console.log("Dados recebidos:", data);
+            } catch {
+                //Informa ao cliente que o JSON enviado é inválido
+                response.statusCode = 400;
+                response.setHeader("Content-Type", "application/json; charset=utf-8");
+                response.end(JSON.stringify({error: "JSON inválido"}));
+                return;
+            }
+        });
+        return;
+    }
+
     //Verifica se a rota principal foi acessada
     if (request.url === "/") {
         response.statusCode = 200;
@@ -51,7 +99,7 @@ export function handleRoutes(
     }
 
     //Verifica se uma solicitação de serviço individual foi acessada
-    if (request.url?.startsWith("/services-requests/")) {
+    if (request.url?.startsWith("/service-requests/")) {
 
         //Divide a URL para obter o ID da solicitação de serviço
         const parts = request.url.split("/");
@@ -76,7 +124,7 @@ export function handleRoutes(
     }
 
     //Verifica se a rota para listar todas as solicitações de serviço foi acessada
-    if (request.url === "/services-requests") {
+    if (request.url === "/service-requests") {
         response.statusCode = 200;
         response.setHeader("Content-Type", "application/json; charset=utf-8");
         response.end(JSON.stringify(serviceRequests));
